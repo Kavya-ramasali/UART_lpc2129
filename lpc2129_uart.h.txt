@@ -1,0 +1,25 @@
+                                                                                                                                                                   #ifndef __LPC2129_UART_H__
+#define __LPC2129_UART_H__
+
+#include <stdint.h>
+
+/* UART Initialization */
+void UART0_init(void);
+
+/* Baudrate Configuration */
+void configure_baudrate(unsigned int baud, unsigned int clock);
+
+/* Frame Configuration */
+void configure_data_width(unsigned char data_width);
+void configure_stop_bit(unsigned int stop_bit);
+void configure_parity(unsigned int parity);
+
+/* Data Transmission */
+uint8_t transmit_data(uint8_t data);
+
+/* Data Reception */
+uint8_t receive_data(uint8_t *error_flags);
+
+#endif
+
+

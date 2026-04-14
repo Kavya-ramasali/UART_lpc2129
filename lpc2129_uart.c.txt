@@ -1,0 +1,78 @@
+#include <stdint.h>
+#include "lpc2129_uart.h"
+#include "lpc2129_regacc.h"
+
+/* Pin configuration */
+#define PINSEL0 (*(volatile unsigned int *)0xE002C000)
+
+/* UART Init */
+void UART0_init(void)
+{
+    PINSEL0 &= ~(0xF);
+    PINSEL0 |= 0x5;
+
+    LCR_DATA_LEN_WR(3);   // 8-bit
+    LCR_STOP_BIT_WR(0);   // 1 stop
+    LCR_PARITY_WR(0);     // no parity
+
+    LCR_DLAB_WR(0);
+}
+
+/* Baudrate */
+void configure_baudrate(unsigned int baud, unsigned int clock)
+{
+    uint16_t divisor;
+
+    if (baud == 0) return;
+
+    LCR_DLAB_WR(1);
+
+    divisor = (uint16_t)(clock / (16 * baud));
+
+    U0DLL = divisor & 0xFF;
+    U0DLM = (divisor >> 8) & 0xFF;
+
+    LCR_DLAB_WR(0);
+}
+
+/* Transmit */
+uint8_t transmit_data(uint8_t data)
+{
+    uint8_t thr_empty = 0;
+
+    while (!thr_empty)
+    {
+        LSR_THRE_RD(thr_empty);
+    }
+
+    U0THR = data;
+    return data;
+}
+
+/* Receive */
+uint8_t receive_data(uint8_t *error_flags)
+{
+    uint8_t data_ready;
+    uint8_t data;
+    uint8_t lsr;
+
+    do
+    {
+        LSR_DR_RD(data_ready);
+    } while (!data_ready);
+
+    data = U0RBR;
+
+    /* Read LSR ONCE */
+    lsr = U0LSR;
+
+    if (error_flags)
+    {
+        *error_flags = (lsr & 0x0E); // OE, PE, FE
+    }
+
+    return data;
+}
+
+
+
