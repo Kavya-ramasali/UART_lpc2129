@@ -1,0 +1,88 @@
+# LPC2129 UART Driver (Bare-Metal Embedded C)
+
+## Overview
+This project demonstrates a **bare-metal UART driver implementation for the LPC2129 (ARM7) microcontroller** using Embedded C. The driver is developed using **direct register-level programming** without any external libraries.
+
+The main objective of this project is to understand how UART communication works at the hardware level, including initialization, baud rate configuration, data transmission, and reception.
+
+---
+
+## Features
+- UART0 initialization on LPC2129 (ARM7)
+- Baud rate configuration using system clock
+- 8-bit data frame format (1 stop bit, no parity)
+- Polling-based data transmission and reception
+- Basic error detection using Line Status Register (LSR)
+- Simple echo-based UART communication
+
+---
+
+## Hardware Used
+- LPC2129 ARM7 Microcontroller
+- UART serial interface
+- keil version 4
+
+---
+
+## Working Principle
+
+### UART Initialization
+- Configures UART0 pins using PINSEL register
+- Sets data format to 8-bit, 1 stop bit, and no parity
+
+### Baud Rate Configuration
+- Baud rate is generated using system clock division formula:
+  - Baud Rate = PCLK / (16 × Divisor)
+- Divisor is loaded into DLL and DLM registers
+
+### Data Transmission
+- Checks Transmit Holding Register (THR) status
+- Sends data byte when transmitter is ready
+
+### Data Reception
+- Waits until Receive Buffer Register (RBR) has valid data
+- Reads incoming byte from UART
+- Checks Line Status Register (LSR) for errors
+
+---
+
+## Functionality Flow
+1. Initialize UART0 peripheral  
+2. Configure baud rate (e.g., 9600)  
+3. Send a test character  
+4. Receive a character from serial terminal  
+5. Echo received character back if no error is detected  
+
+---
+
+## Skills Demonstrated
+- Embedded C programming
+- ARM7 microcontroller programming
+- Register-level peripheral configuration
+- UART communication protocol understanding
+- Bitwise operations and low-level hardware control
+- Polling-based embedded system design
+
+---
+
+## Key Concepts Learned
+- UART asynchronous communication
+- Baud rate generation and clock division
+- Microcontroller peripheral initialization
+- Line Status Register (LSR) error handling
+- Bare-metal embedded system development
+
+---
+
+## Future Improvements
+- Interrupt-based UART communication
+- Circular buffer (FIFO) implementation
+- Multi-byte communication support
+- Enhanced error handling (overrun, framing, parity errors)
+- Scalable driver design for multiple UART channels
+
+---
+
+## Author
+Kavya Basavaraj Ramasali
+Final Year Electronics / Intern   
